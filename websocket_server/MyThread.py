@@ -12,12 +12,12 @@ class ThreadRun(threading.Thread):
         self.client_data = client_data
         self.tr = tr
         self.RunScript = os.getcwd() + '/script.sh %s' % self.client_data   ############
-        if tr:
-            tr.stop()
-            tr.join()
+        if self.tr:
+            self.tr.stop()
+            self.tr.join()
 
     def run(self):
-        popen = subprocess.Popen(['bash', '-c', self.RunScript], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        popen = subprocess.Popen(self.RunScript,shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         self.pid = popen.pid
         print('Popen.pid:' + str(self.pid))
         self.ifdo = True;
@@ -29,7 +29,7 @@ class ThreadRun(threading.Thread):
                 sendMessage(self.conn,'SUCCESS!')
                 break
         if os.path.isdir('/proc/%s' % str(self.pid)):
-            os.kill(self.pid, 9)
+            os.system('pkill -9 -P %d' % self.pid)
             print "kill %d done" % self.pid
 
     def stop (self):
