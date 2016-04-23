@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>WebSocket</title>
+    <link rel="stylesheet" href="css/main.css"/>
+    <script type="text/javascript" src="js/main.js"></script>
+</head>
+
+<body onload="init()" class="body">
+
+    <h3>WebSocket</h3>
+    <br>
+    <form id='form1' name="input">
+        <select id="select1" class="select1" name="option">
+            <option value="update">update</option>
+            <option value="status" selected="selected">status</option> #默认
+            <option value="start">start</option>
+            <option value="stop">stop</option>
+            <option value="restart">restart</option>
+        </select>
+        node:
+        <input id="app1" type="text" class="input-1" placeholder="请输入应用名或IP" name="app">
+        <button id="start1" type="button" class="btn-start btn-start-p" onclick="begin(this)">开始</button>
+        <button id="close1" type="button" class="btn-start btn-start-p" onclick="close_websocket()">关闭</button>
+        <button id="flush1" type="button" class="btn-start btn-start-p" onclick="clear_log()">刷新</button>
+        <p id="p1" class="p1"></p>
+    </form>
+    <fieldset id="log1" class="log1"></fieldset>
+
+
+
+</body>
+</html>

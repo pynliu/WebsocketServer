@@ -5,7 +5,7 @@ websocket_server='websocket_server/WebSocket_Server.py'
 
 case $1 in
     start)
-        python $diango_server runserver 0.0.0.0:80 >/dev/null &
+        python $diango_server runserver 0.0.0.0:8080 >/dev/null &
         python $websocket_server >/dev/null &
         [ $? -eq 0 ] && echo "Start success!" || \
             echo "Start fail!"

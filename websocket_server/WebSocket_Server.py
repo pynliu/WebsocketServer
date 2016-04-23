@@ -6,12 +6,21 @@ from base64 import b64encode, b64decode
 from xml import parsers
 from MyThread import ThreadRun
 from socket_data import *
+import time,re
 
 connectionlist = {}
          
 def deleteconnection(item):
     global connectionlist
     del connectionlist['connection'+item]
+
+def safe(conn, msg):
+    b = re.search(r'([0-9,a-z,A-Z,\s,\-,\_]+)', msg)
+    if b:
+        if len(msg) == len(b.group()):
+            return True
+    sendMessage(conn, '有特殊符号，请重新输入。。。')
+    return False
       
 class WebSocket(threading.Thread):
     GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
@@ -32,8 +41,13 @@ class WebSocket(threading.Thread):
   
         while True:
             if self.handshaken == False:
-                print ('Socket%s Start Handshaken with %s!\n' % (self.index,self.remote))
                 self.buffer += bytes.decode(self.conn.recv(1024))
+                if 'Sec-WebSocket-Key' not in  self.buffer: 
+                    print "not websocket~ closed [%s] ,msg:%s" % (self.index, self.buffer)
+                    self.conn.close()
+                    break
+                    
+                print ('Socket%s Start Handshaken with %s!\n' % (self.index,self.remote))
  
                 if self.buffer.find('\r\n\r\n') != -1:
                     header, data = self.buffer.split('\r\n\r\n', 1)
@@ -78,6 +92,7 @@ class WebSocket(threading.Thread):
                     break
                 else:
                     print ('%sSocket[%s] msg: %s' % (self.remote, self.index, client_data))
+                    if not safe(self.conn, client_data):continue
                     # print "[%s] [%s] [%s]" % (self.conn, client_data, tr)
                     tr = ThreadRun(self.conn, client_data, tr)
                     tr.setDaemon(True)
